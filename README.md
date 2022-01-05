@@ -1,3 +1,3 @@
 # flutter_radar_graphic
  
-![Alt text](/relative/path/to/img.jpg?raw=true "Optional Title")
+![Alt text](radar_graphic_image.png)
