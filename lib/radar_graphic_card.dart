@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'dart:ui' as ui;
@@ -141,26 +142,34 @@ class RadarChartPainter extends CustomPainter {
     }
 
     int totalSegments = segments * nodes;
+    int x = 0;
     int i = 0;
     for (var j = 0; j < totalSegments + 5; j++) {
       final segStyle = Paint()
-        ..strokeWidth = 2
+        ..strokeWidth = 1
         ..color = Colors.black
         ..style = PaintingStyle.stroke;
       var segNo = (j / nodes).floor() / segments;
       Offset segPoint = Offset(points[i][0], points[i][1]) * segNo.toDouble();
 
-      canvas.drawCircle(segPoint, 2, segStyle);
-      canvas.drawOval(Rect.fromCircle(center: Offset(0, 0), radius: (25 * i).toDouble()), segStyle);
+      // canvas.drawCircle(segPoint, 2, segStyle);
+      if (x < 10) {
+        canvas.drawOval(Rect.fromCircle(center: Offset(0, 0), radius: (12.5 * x).toDouble()), segStyle);
+      }
+      x++;
       i++;
       if (i >= nodes) {
         i = 0;
       }
     }
-
+    final paint = Paint()
+      ..color = Colors.black
+      ..strokeWidth = 4
+      ..strokeCap = StrokeCap.round;
+    final pointMode = ui.PointMode.points;
     final polyStyle = Paint()
       ..strokeWidth = 2
-      ..color = Colors.green.withAlpha(150);
+      ..color = Color(0xfff34C691).withAlpha(200);
     List<Offset> dataOffsets = [];
     for (var i = 0; i < nodes; i++) {
       var temp = Offset(points[i][0], points[i][1]) * data[i] * polyAniProgress;
@@ -168,6 +177,7 @@ class RadarChartPainter extends CustomPainter {
     }
     Path polyPath = Path();
     polyPath.addPolygon(dataOffsets, true);
+    canvas.drawPoints(pointMode, dataOffsets, paint);
     canvas.drawPath(polyPath, polyStyle);
 
     double fontHeight = 12.0;
